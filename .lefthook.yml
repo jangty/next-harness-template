@@ -1,0 +1,51 @@
+# pre-commit 게이트 — 피드백 사다리의 두 번째 레이어(초 단위).
+# PostToolUse(ms) → pre-commit(s) → CI(min) → 사람(h)
+#
+# 설치: npm i -D lefthook && npx lefthook install
+# 골격 단계에서는 npm 스크립트가 아직 없을 수 있다. 스크립트가 생기면 자동 작동한다.
+
+pre-commit:
+  parallel: true
+  commands:
+    typecheck:
+      # 전체 타입 체크 (빠른 실패)
+      run: npm run typecheck
+      skip:
+        - merge
+        - rebase
+    lint:
+      # 전체 lint — 경계 린트(boundary) 포함. 변경 파일만이 아니라 경계는 전체로 본다.
+      run: npm run lint
+      skip:
+        - merge
+        - rebase
+    test:
+      # 변경과 관련된 테스트만 — 러너별 문법은 npm 스크립트로 캡슐화한다.
+      # ⚠️ 러너(vitest/jest) 미결(ADR 대기) → 러너-특정 플래그를 여기 박지 않는다.
+      #    러너 채택 시 package.json 에 "test:related" 정의 후 자동 작동. 예:
+      #      jest:   "test:related": "jest --findRelatedTests --passWithNoTests"
+      #      vitest: "test:related": "vitest related --run --passWithNoTests"
+      glob: "*.{ts,tsx,js,jsx}"
+      run: npm run test:related -- {staged_files}
+      skip:
+        - merge
+        - rebase
+    # 가드 훅 회귀 테스트 — "적어둔 방어 ≠ 동작하는 방어".
+    # 가드의 *의도된 보호*(비밀/산출물/파괴적 차단)가 조용히 깨지면 커밋을 막는다.
+    # 가드 훅 자체나 이 정책을 건드린 커밋에서만 의미가 있지만, 빠르므로 항상 돌린다.
+    guard-selftest:
+      run: node scripts/hooks/guard-pretooluse.check.mjs
+      skip:
+        - merge
+        - rebase
+    # 비밀 파일 스테이징을 마지막 방어선으로 차단 (가드 훅 + .gitignore 와 삼중 방어).
+    # ⚠️ pre-commit 의 commands 아래에 있어야 실제 작동한다(별도 top-level 키는 git 훅이 아님).
+    no-env:
+      # .env.example/.sample/.template 은 커밋되는 안전 템플릿이므로 예외.
+      run: |
+        if echo "{staged_files}" | tr ' ' '\n' | grep -E '(^|/)\.env(\.|$)' | grep -vqE '\.env\.(example|sample|template)$'; then
+          echo "🚫 .env 비밀 파일은 스테이징할 수 없습니다 (.env.example 만 허용)."; exit 1;
+        fi
+      skip:
+        - merge
+        - rebase

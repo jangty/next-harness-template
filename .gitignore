@@ -1,0 +1,35 @@
+# 비밀 — 절대 커밋 금지 (가드 훅 + 권한 deny와 이중 방어)
+.env
+.env.*
+!.env.example
+
+# 의존성
+node_modules/
+
+# 빌드 산출물
+.next/
+out/
+dist/
+build/
+
+# 로그·캐시
+*.log
+npm-debug.log*
+.DS_Store
+coverage/
+.turbo/
+
+# Prisma 로컬
+prisma/*.db
+prisma/*.db-journal
+
+# 에디터
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# 도구 런타임 상태 (oh-my-claudecode 세션·메모리·HUD — 머신/세션 고유, 커밋·공개 불필요)
+.omc/
+
+# Claude Code 로컬 설정 (머신별 권한 누적 — 커밋 금지)
+.claude/settings.local.json
