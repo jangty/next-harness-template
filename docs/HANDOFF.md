@@ -7,7 +7,7 @@
 하네스 골격 셋업 완료(템플릿 기준선). **제품 명세 미정의**(`docs/product/` 슬롯 비어 있음) · 앱 코드/의존성 없음(베이스 스택 미설치).
 
 ## 남은 TODO (다음 진입점 후보)
-- [ ] **제품 명세 확정 (선행)**: `/kickoff` 발견 인터뷰 → `docs/product/{brief,requirements}.md`. 함의된 결정은 ADR 스텁, MVP는 exec-plan 으로. 스캐폴딩보다 먼저.
+- [ ] **제품 명세 확정 (선행)**: `/kickoff` 깊이 우선 발견 인터뷰(모호도 게이트) → `docs/product/{brief,requirements,ux-spec}.md`. 함의된 결정은 ADR 스텁, MVP는 exec-plan 으로. 스캐폴딩보다 먼저. (발견 깊이 격상 근거: ADR-0001)
 - [ ] 베이스 스택 스캐폴딩: `create-next-app` + Tailwind v4 + shadcn/ui + Supabase + Prisma (공식 문서/Context7로 최신 문법 확인 후).
 - [ ] 의존성 설치 후 `npm run typecheck|lint|test|build` 스크립트 정의 → 훅/lefthook 가 실제 작동.
 - [ ] `npx lefthook install` 로 pre-commit 활성화.
@@ -119,4 +119,32 @@ M CLAUDE.md
 ?? .claude/commands/kickoff.md
 ?? .claude/skills/requirements-discovery/
 ?? docs/product/
+```
+
+<!-- session-stamp -->
+- **2026-06-18T02:19:17.399Z** · branch `main` · last `f953077 feat(kickoff): 프로젝트 시작 요구사항 발견 절차 추가`
+  - 작업 트리 깨끗함
+
+<!-- session-stamp -->
+- **2026-06-18T21:35:21.734Z** · branch `main` · last `f953077 feat(kickoff): 프로젝트 시작 요구사항 발견 절차 추가`
+  - 미커밋 변경:
+```
+M docs/HANDOFF.md
+```
+
+<!-- session-stamp -->
+- **2026-06-18T22:15:52.312Z** · branch `main` · last `f953077 feat(kickoff): 프로젝트 시작 요구사항 발견 절차 추가`
+  - 미커밋 변경:
+```
+M .claude/commands/kickoff.md
+ M .claude/skills/requirements-discovery/SKILL.md
+ M CLAUDE.md
+ M README.md
+ M docs/HANDOFF.md
+ M docs/harness-spec.md
+ M docs/product/README.md
+ M docs/product/requirements.md
+ M scripts/hooks/session-start.mjs
+?? docs/adr/0001-requirements-discovery-depth.md
+?? docs/product/ux-spec.md
 ```

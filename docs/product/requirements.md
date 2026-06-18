@@ -2,7 +2,7 @@
 # Requirements — 기능·비기능 요건 (검증 가능하게)
 
 > **슬롯.** 기능요건은 유저스토리 + 수용기준, 비기능요건은 카테고리별로. 작성 컨벤션은 `requirements-discovery` 스킬.
-> 각 Must-have 수용기준은 테스트로 직결된다 → `docs/verification.md`.
+> 각 Must-have 수용기준은 테스트로 직결된다 → `docs/verification.md`. 각 FR 이 어느 화면에서 구현되는지는 [ux-spec.md](ux-spec.md) 가 역추적한다.
 
 ## 기능 요건 (유저스토리 + 수용기준)
 

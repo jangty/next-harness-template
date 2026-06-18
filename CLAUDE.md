@@ -11,7 +11,7 @@
 ## 무엇이 어디 있는지 (라우팅)
 | 찾는 것 | 위치 |
 |---|---|
-| 제품 비전·요구사항(명세) | [docs/product/](docs/product/) |
+| 제품 비전·요구사항·화면설계(명세) | [docs/product/](docs/product/) |
 | 아키텍처 맵·경계 | [docs/architecture.md](docs/architecture.md) |
 | UI 토큰·컴포넌트 컨벤션 | [docs/design-system.md](docs/design-system.md) |
 | 데이터 접근·마이그레이션 | [docs/data.md](docs/data.md) |

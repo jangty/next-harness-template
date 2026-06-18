@@ -79,7 +79,7 @@ docs/                      # 기록 시스템 (아래 표)
 | 문서 | 내용 |
 |---|---|
 | [HANDOFF.md](docs/HANDOFF.md) | **새 세션의 진입점.** 현재 상태·남은 TODO·다음 진입점. |
-| [product/](docs/product/) | **제품 명세(WHAT/WHY).** 브리프(PRD-lite)·요구사항(유저스토리+수용기준·NFR). `/kickoff` 로 채움. |
+| [product/](docs/product/) | **제품 명세(WHAT/WHY).** 브리프(PRD-lite)·요구사항(유저스토리+수용기준·NFR)·화면설계(인벤토리·플로우·상태). `/kickoff`(깊이 우선·모호도 게이트)로 채움. |
 | [architecture.md](docs/architecture.md) | 아키텍처 맵·레이어·경계 |
 | [design-system.md](docs/design-system.md) | UI 토큰·컴포넌트 컨벤션 |
 | [data.md](docs/data.md) | 데이터 접근·마이그레이션 절차 |
@@ -115,8 +115,8 @@ git init
 
 [docs/HANDOFF.md](docs/HANDOFF.md) 의 TODO 가 곧 체크리스트다:
 
-0. **제품 명세 확정 (선행)** — `/kickoff` 발견 인터뷰로 `docs/product/{brief,requirements}.md` 작성.
-   *명세 없이 스캐폴딩 금지 — SessionStart 훅이 게이트한다(DoR 통과까지).*
+0. **제품 명세 확정 (선행)** — `/kickoff` 깊이 우선 발견 인터뷰(한질문·모호도 게이트·challenge)로 `docs/product/{brief,requirements,ux-spec}.md` 작성.
+   *명세 없이 스캐폴딩 금지 — SessionStart 훅이 세 문서 센티넬로 게이트한다(DoR·모호도 임계 통과까지). 발견 깊이 격상 근거: ADR-0001.*
 1. **베이스 스택 스캐폴딩** — `create-next-app` + Tailwind v4 + shadcn/ui + Supabase + Prisma.
    *(도구별 최신 문법은 추측 말고 공식 문서/Context7 확인 후.)*
 2. **npm 스크립트 정의** — `typecheck` · `lint` · `test` · `build` (+ `test:related`).
@@ -136,7 +136,7 @@ git init
 
 | 명령 | 목적 |
 |---|---|
-| `/kickoff` | **프로젝트 시작** — 발견 인터뷰로 제품 명세 확정 (→ ADR·exec-plan·HANDOFF) |
+| `/kickoff` | **프로젝트 시작** — 깊이 우선 발견 인터뷰(모호도 게이트)로 제품 명세(브리프·요구사항·화면설계) 확정 (→ ADR·exec-plan·HANDOFF) |
 | `/commit` | 검증(typecheck→lint→test) 통과 후 컨벤셔널 커밋 |
 | `/review` | 현재 diff 셀프리뷰 (타입·린트·불변식·정의완료·비밀/산출물) |
 | `/deploy` | 배포 (**고위험 — 사람 게이트**) |
@@ -144,7 +144,7 @@ git init
 
 ### 6.2 스킬 (자동 활성)
 
-- **requirements-discovery** — "새 프로젝트/뭐 만들지/요구사항 정의" 시 → 발견 인터뷰로 명세화.
+- **requirements-discovery** — "새 프로젝트/뭐 만들지/요구사항 정의/화면 설계" 시 → 깊이 우선 발견 인터뷰(한질문·모호도·challenge)로 명세화.
 - **feature-slice** — "기능 추가/새 페이지·엔드포인트" 요청 시 → 수직 슬라이스 스캐폴딩.
 - **ui-component** — "컴포넌트/버튼/폼 만들어줘" 시 → Tailwind v4 + shadcn 컨벤션 적용.
 

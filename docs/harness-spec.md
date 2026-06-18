@@ -24,7 +24,7 @@
 
 **작업 방식**: 도구별 최신 설정은 추측하지 말고 공식 문서/Context7로 확인 후 적용. 설계 결정은 미리 못박지 말고 ADR로 기록.
 
-**Step -1 (제품 명세)**: 스캐폴딩 전에 `/kickoff` 발견 인터뷰로 *무엇을·누구를 위해·왜*를 `docs/product/` 에 확정한다(WHAT/WHY 슬롯). 명세 없이 코딩 시작 금지 — SessionStart 훅이 게이트(`docs/product/brief.md` 의 `kickoff:pending` 센티넬). 산출물은 ADR·exec-plan·HANDOFF 로 흘러든다.
+**Step -1 (제품 명세)**: 스캐폴딩 전에 `/kickoff` 깊이 우선 발견 인터뷰(한질문·모호도 게이트·challenge)로 *무엇을·누구를 위해·왜·어떤 화면으로*를 `docs/product/` 에 확정한다(WHAT/WHY 슬롯). 명세 없이 코딩 시작 금지 — SessionStart 훅이 게이트(세 문서 `brief·requirements·ux-spec` 의 `kickoff:pending` 센티넬). 산출물은 ADR·exec-plan·HANDOFF 로 흘러든다. (발견 깊이 격상 근거: `docs/adr/0001-requirements-discovery-depth.md`)
 
 **Step 0 (스캐폴딩)**: 베이스 스택과 의존성은 에이전트가 현재 CLI로 생성·설치한 뒤, 그 위에 아래 하네스를 얹는다.
 
@@ -66,7 +66,7 @@
 
 각 문서는 "다뤄야 할 주제"만 정해두고, 결정·상세는 개발하며 채운다.
 
-- `product/` — **WHAT/WHY 슬롯**: 제품 브리프(PRD-lite)·요구사항(유저스토리+수용기준·NFR). `/kickoff` 로 채운다. 나머지 docs(HOW)의 상류.
+- `product/` — **WHAT/WHY 슬롯**: 제품 브리프(PRD-lite)·요구사항(유저스토리+수용기준·NFR)·화면설계(ux-spec: 인벤토리·플로우·상태, FR 역추적). `/kickoff` 로 채운다. 나머지 docs(HOW)의 상류.
 - `architecture.md` — 아키텍처 맵·경계. *구체 레이어 구성은 ADR로 결정·기록* (원문의 레이어드 패턴은 채택 후보).
 - `design-system.md` — UI 토큰·컴포넌트 컨벤션 슬롯.
 - `data.md` — 데이터 접근·마이그레이션 절차 슬롯.

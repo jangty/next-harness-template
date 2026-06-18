@@ -33,15 +33,22 @@ function fileSection(title, path, max = 4000) {
 }
 
 function productSpecNudge() {
-  // 제품 명세 게이트: brief.md 가 없거나 센티넬(kickoff:pending)이 남아 있으면 미작성.
-  const brief = "docs/product/brief.md";
-  const pending =
-    !existsSync(brief) || safe(() => readFileSync(brief, "utf8"), "").includes("kickoff:pending");
+  // 제품 명세 게이트: 세 문서(brief·requirements·ux-spec) 중 하나라도 없거나
+  // 센티넬(kickoff:pending)이 남아 있으면 미작성 → 화면 설계까지 기계 강제(ADR-0001).
+  const specs = [
+    "docs/product/brief.md",
+    "docs/product/requirements.md",
+    "docs/product/ux-spec.md",
+  ];
+  const pending = specs.some(
+    (p) => !existsSync(p) || safe(() => readFileSync(p, "utf8"), "").includes("kickoff:pending")
+  );
   if (!pending) return "";
   return (
     "\n## ⚠️ 제품 명세 미정의\n" +
-    "코드 전에 `/kickoff` 로 발견 인터뷰를 돌려 `docs/product/{brief,requirements}.md` 를 확정하세요. " +
-    "(바이브코딩 방지 게이트 — 명세 확정 시 이 알림은 꺼집니다.)\n"
+    "코드 전에 `/kickoff` 로 발견 인터뷰(깊이 우선·모호도 게이트)를 돌려 " +
+    "`docs/product/{brief,requirements,ux-spec}.md` 를 확정하세요. " +
+    "(바이브코딩 방지 게이트 — 세 문서의 센티넬이 다 제거되면 이 알림은 꺼집니다.)\n"
   );
 }
 
