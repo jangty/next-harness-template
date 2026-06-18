@@ -58,13 +58,13 @@
 CLAUDE.md                  # 맵: 라우팅 + 메타 원칙 + 불변식(누적). ≤150줄.
 .claude/
   settings.json            # 권한(allow/ask/deny) + 훅 등록
-  commands/                # 사용자 호출 명령 (/commit /review /deploy /cleanup)
-  skills/                  # 자동 활성 스킬 (feature-slice, ui-component)
+  commands/                # 사용자 호출 명령 (/kickoff /commit /review /deploy /cleanup)
+  skills/                  # 자동 활성 스킬 (requirements-discovery, feature-slice, ui-component)
 scripts/hooks/
   guard-pretooluse.mjs       # ① 비밀파일 ② 산출물 편집 ③ 파괴적 명령 차단
   guard-pretooluse.check.mjs # 가드 회귀 테스트 (의존성 없음)
   posttooluse-format.mjs     # 변경 파일만 포맷+lint (성공 침묵)
-  session-start.mjs          # git log + HANDOFF + exec-plan + lessons 주입
+  session-start.mjs          # 제품명세 게이트 + git log + HANDOFF + exec-plan + lessons 주입
   stop-handoff.mjs           # 세션 종료 시 HANDOFF Session log 스탬프 (최근 12개)
 .lefthook.yml              # pre-commit 게이트 (typecheck·lint·test·가드·no-env)
 .github/workflows/ci.yml   # CI 게이트 (가드 self-test + 검증)
@@ -79,6 +79,7 @@ docs/                      # 기록 시스템 (아래 표)
 | 문서 | 내용 |
 |---|---|
 | [HANDOFF.md](docs/HANDOFF.md) | **새 세션의 진입점.** 현재 상태·남은 TODO·다음 진입점. |
+| [product/](docs/product/) | **제품 명세(WHAT/WHY).** 브리프(PRD-lite)·요구사항(유저스토리+수용기준·NFR). `/kickoff` 로 채움. |
 | [architecture.md](docs/architecture.md) | 아키텍처 맵·레이어·경계 |
 | [design-system.md](docs/design-system.md) | UI 토큰·컴포넌트 컨벤션 |
 | [data.md](docs/data.md) | 데이터 접근·마이그레이션 절차 |
@@ -114,6 +115,8 @@ git init
 
 [docs/HANDOFF.md](docs/HANDOFF.md) 의 TODO 가 곧 체크리스트다:
 
+0. **제품 명세 확정 (선행)** — `/kickoff` 발견 인터뷰로 `docs/product/{brief,requirements}.md` 작성.
+   *명세 없이 스캐폴딩 금지 — SessionStart 훅이 게이트한다(DoR 통과까지).*
 1. **베이스 스택 스캐폴딩** — `create-next-app` + Tailwind v4 + shadcn/ui + Supabase + Prisma.
    *(도구별 최신 문법은 추측 말고 공식 문서/Context7 확인 후.)*
 2. **npm 스크립트 정의** — `typecheck` · `lint` · `test` · `build` (+ `test:related`).
@@ -133,6 +136,7 @@ git init
 
 | 명령 | 목적 |
 |---|---|
+| `/kickoff` | **프로젝트 시작** — 발견 인터뷰로 제품 명세 확정 (→ ADR·exec-plan·HANDOFF) |
 | `/commit` | 검증(typecheck→lint→test) 통과 후 컨벤셔널 커밋 |
 | `/review` | 현재 diff 셀프리뷰 (타입·린트·불변식·정의완료·비밀/산출물) |
 | `/deploy` | 배포 (**고위험 — 사람 게이트**) |
@@ -140,12 +144,13 @@ git init
 
 ### 6.2 스킬 (자동 활성)
 
+- **requirements-discovery** — "새 프로젝트/뭐 만들지/요구사항 정의" 시 → 발견 인터뷰로 명세화.
 - **feature-slice** — "기능 추가/새 페이지·엔드포인트" 요청 시 → 수직 슬라이스 스캐폴딩.
 - **ui-component** — "컴포넌트/버튼/폼 만들어줘" 시 → Tailwind v4 + shadcn 컨벤션 적용.
 
 ### 6.3 작업 흐름
 
-1. 새 세션 → SessionStart 훅이 **HANDOFF + 진행 중 계획 + lessons + git log** 자동 주입.
+1. 새 세션 → SessionStart 훅이 **HANDOFF + 진행 중 계획 + lessons + git log** 자동 주입 (+ 제품 명세 미정의 시 `/kickoff` 넛지).
 2. 작업 → 편집할 때마다 PostToolUse 가 **변경 파일만 포맷+lint**(성공은 침묵).
 3. 위험한 짓을 시도하면 → 가드 훅이 **차단 + 사유·대안 출력**.
 4. 커밋 → pre-commit 이 typecheck·lint·test·가드 self-test·비밀 차단 재확인.

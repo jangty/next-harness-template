@@ -6,10 +6,12 @@
 
 ## 세션 진입점
 새 세션은 `docs/HANDOFF.md`에서 시작한다. 진행 중 계획은 `docs/exec-plans/active/`에 있다. (둘 다 SessionStart 훅이 자동 주입)
+**새 프로젝트는 먼저 `/kickoff`** (발견 인터뷰)로 제품 명세를 확정한 뒤 스캐폴딩한다 — 명세 미정의 시 SessionStart 훅이 게이트.
 
 ## 무엇이 어디 있는지 (라우팅)
 | 찾는 것 | 위치 |
 |---|---|
+| 제품 비전·요구사항(명세) | [docs/product/](docs/product/) |
 | 아키텍처 맵·경계 | [docs/architecture.md](docs/architecture.md) |
 | UI 토큰·컴포넌트 컨벤션 | [docs/design-system.md](docs/design-system.md) |
 | 데이터 접근·마이그레이션 | [docs/data.md](docs/data.md) |
@@ -35,8 +37,8 @@
 | env 검증 (loud fail) | [src/env.ts](src/env.ts) |
 
 ## 명령 & 스킬
-- 명령(사용자 호출): `/commit` · `/review` · `/deploy`(고위험) · `/cleanup` — [.claude/commands/](.claude/commands/)
-- 스킬(자동): 기능 수직 슬라이스 · UI 컴포넌트 추가 — [.claude/skills/](.claude/skills/)
+- 명령(사용자 호출): `/kickoff`(프로젝트 시작) · `/commit` · `/review` · `/deploy`(고위험) · `/cleanup` — [.claude/commands/](.claude/commands/)
+- 스킬(자동): 요구사항 발견 · 기능 수직 슬라이스 · UI 컴포넌트 추가 — [.claude/skills/](.claude/skills/)
 
 ## 작업 방식 (메타 원칙)
 1. **맵, 매뉴얼 아님** — 상세는 docs로. 여긴 라우팅만.

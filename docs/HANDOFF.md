@@ -4,9 +4,10 @@
 > 산문(요약/남은 TODO/다음 진입점)은 사람·에이전트가 작성하고, 하단 Session log 는 Stop 훅이 기계적으로 채운다.
 
 ## 현재 상태
-하네스 골격 셋업 완료(템플릿 기준선). 아직 앱 코드/의존성은 없음(베이스 스택 미설치).
+하네스 골격 셋업 완료(템플릿 기준선). **제품 명세 미정의**(`docs/product/` 슬롯 비어 있음) · 앱 코드/의존성 없음(베이스 스택 미설치).
 
 ## 남은 TODO (다음 진입점 후보)
+- [ ] **제품 명세 확정 (선행)**: `/kickoff` 발견 인터뷰 → `docs/product/{brief,requirements}.md`. 함의된 결정은 ADR 스텁, MVP는 exec-plan 으로. 스캐폴딩보다 먼저.
 - [ ] 베이스 스택 스캐폴딩: `create-next-app` + Tailwind v4 + shadcn/ui + Supabase + Prisma (공식 문서/Context7로 최신 문법 확인 후).
 - [ ] 의존성 설치 후 `npm run typecheck|lint|test|build` 스크립트 정의 → 훅/lefthook 가 실제 작동.
 - [ ] `npx lefthook install` 로 pre-commit 활성화.
@@ -15,7 +16,7 @@
 - [ ] `src/env.ts` 환경변수 스키마 채우기.
 
 ## 다음 진입점
-위 TODO 중 "베이스 스택 스캐폴딩"부터. 스택을 얹은 뒤 docs 슬롯을 채우며 불변식을 인코딩한다.
+제품 명세가 아직 없다 → **`/kickoff` 먼저.** 명세(DoR 게이트 통과) 확정 후 "베이스 스택 스캐폴딩"으로. 스택을 얹은 뒤 docs 슬롯을 채우며 불변식을 인코딩한다.
 
 ## Session log
 > Stop 훅이 세션 종료마다 기계적 스탬프를 추가합니다. 산문 요약은 위 섹션들에 직접 작성하세요.
@@ -104,4 +105,18 @@
 ?? eslint.config.mjs
 ?? scripts/
 ?? src/
+```
+
+<!-- session-stamp -->
+- **2026-06-18T00:04:56.438Z** · branch `main` · last `864ffdc first commit`
+  - 미커밋 변경:
+```
+M CLAUDE.md
+ M README.md
+ M docs/HANDOFF.md
+ M docs/harness-spec.md
+ M scripts/hooks/session-start.mjs
+?? .claude/commands/kickoff.md
+?? .claude/skills/requirements-discovery/
+?? docs/product/
 ```
