@@ -16,7 +16,8 @@
       "Bash(git show:*)",
       "Bash(git branch:*)",
       "Bash(git blame:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "mcp__context7__*"
     ],
     "ask": [
       "Bash(git push:*)",
@@ -115,12 +116,12 @@
         ]
       }
     ],
-    "Stop": [
+    "SessionEnd": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/hooks/stop-handoff.mjs\""
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/hooks/session-end-handoff.mjs\""
           }
         ]
       }

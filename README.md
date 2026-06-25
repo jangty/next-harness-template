@@ -60,17 +60,19 @@ CLAUDE.md                  # 맵: 라우팅 + 메타 원칙 + 불변식(누적).
   settings.json            # 권한(allow/ask/deny) + 훅 등록
   commands/                # 사용자 호출 명령 (/kickoff /commit /review /deploy /cleanup)
   skills/                  # 자동 활성 스킬 (requirements-discovery, feature-slice, ui-component)
+  agents/                  # 위임 서브에이전트 (code-reviewer, security-reviewer — 적대적 리뷰)
 scripts/hooks/
   guard-pretooluse.mjs       # ① 비밀파일 ② 산출물 편집 ③ 파괴적 명령 차단
   guard-pretooluse.check.mjs # 가드 회귀 테스트 (의존성 없음)
   posttooluse-format.mjs     # 변경 파일만 포맷+lint (성공 침묵)
-  session-start.mjs          # 제품명세 게이트 + git log + HANDOFF + exec-plan + lessons 주입
-  stop-handoff.mjs           # 세션 종료 시 HANDOFF Session log 스탬프 (최근 12개)
+  session-start.mjs          # 제품명세 게이트 + git log + HANDOFF + exec-plan + lessons 주입 (컴팩션 후 재발화)
+  session-end-handoff.mjs    # 세션 종료 시 HANDOFF Session log 스탬프 (세션별 1줄, 최근 12개)
 .lefthook.yml              # pre-commit 게이트 (typecheck·lint·test·가드·no-env)
 .github/workflows/ci.yml   # CI 게이트 (가드 self-test + 검증)
 eslint.config.mjs          # 경계 린트 틀 (의존성 방향 강제 — ADR 후 활성화)
 src/env.ts                 # 환경변수 검증 (loud fail — 스키마는 채울 슬롯)
 .env.example               # 환경변수 예시 (실제 값은 .env, 커밋 금지)
+.mcp.json                  # MCP 서버 (Context7 — 공식 문서 조회, 비밀 미포함)
 docs/                      # 기록 시스템 (아래 표)
 ```
 
@@ -138,7 +140,7 @@ git init
 |---|---|
 | `/kickoff` | **프로젝트 시작** — 깊이 우선 발견 인터뷰(모호도 게이트)로 제품 명세(브리프·요구사항·화면설계) 확정 (→ ADR·exec-plan·HANDOFF) |
 | `/commit` | 검증(typecheck→lint→test) 통과 후 컨벤셔널 커밋 |
-| `/review` | 현재 diff 셀프리뷰 (타입·린트·불변식·정의완료·비밀/산출물) |
+| `/review` | diff **적대적 리뷰** — fresh 서브에이전트(`code-reviewer`/`security-reviewer`) 위임 (타입·린트·불변식·정의완료·비밀/산출물) |
 | `/deploy` | 배포 (**고위험 — 사람 게이트**) |
 | `/cleanup` | 엔트로피 GC (죽은 코드·미사용 의존성·docs 신선도) |
 
@@ -148,6 +150,8 @@ git init
 - **feature-slice** — "기능 추가/새 페이지·엔드포인트" 요청 시 → 수직 슬라이스 스캐폴딩.
 - **ui-component** — "컴포넌트/버튼/폼 만들어줘" 시 → Tailwind v4 + shadcn 컨벤션 적용.
 
+**에이전트(위임·읽기전용)**: `code-reviewer`·`security-reviewer` — `/review` 가 **fresh 컨텍스트**에 위임하는 적대적 리뷰어(작성자 편향 제거). 수정은 메인 세션이 한다.
+
 ### 6.3 작업 흐름
 
 1. 새 세션 → SessionStart 훅이 **HANDOFF + 진행 중 계획 + lessons + git log** 자동 주입 (+ 제품 명세 미정의 시 `/kickoff` 넛지).
@@ -156,7 +160,7 @@ git init
 4. 커밋 → pre-commit 이 typecheck·lint·test·가드 self-test·비밀 차단 재확인.
 5. 새 결정 → **ADR 기록** + `CLAUDE.md` 불변식에 한 줄 추가.
 6. 막히면 → 메커니즘 하나 추가 + `docs/lessons.md` 기록(반복 하드닝).
-7. 세션 종료 → Stop 훅이 HANDOFF Session log 갱신(다음 세션 연속성).
+7. 세션 종료 → SessionEnd 훅이 HANDOFF Session log 갱신(세션별 1줄, 다음 세션 연속성).
 
 ---
 

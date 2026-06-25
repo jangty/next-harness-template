@@ -51,15 +51,17 @@
 
 - **PreToolUse (가드)**: ① 비밀 파일 접근 차단(읽기·편집·스테이징, `cat` 포함) ② 빌드 산출물 편집 차단 ③ 파괴적 명령 차단. 차단 시 exit 2 + 사유·대안 출력.
 - **PostToolUse**: 변경 파일만 포맷+lint. **성공 침묵, 실패만 출력.** 무거운 검사는 여기 두지 않음.
-- **SessionStart**: 최근 git log + `HANDOFF.md` + 진행 중 exec-plan + `lessons.md`를 주입(기록 시스템 + 연속성).
-- **Stop**: `HANDOFF.md` 갱신(요약/남은 TODO/다음 진입점) + 필요 시 `lessons.md` 추가.
+- **SessionStart**: 최근 git log + `HANDOFF.md` + 진행 중 exec-plan + `lessons.md`를 주입(기록 시스템 + 연속성). `compact` 소스로 **컴팩션 후에도 재발화** → 연속성 컨텍스트가 압축을 생존.
+- **SessionEnd**: `HANDOFF.md` Session log 에 세션 종료 시 1회 스탬프(브랜치·마지막 커밋·status). *왜 Stop 이 아님: Stop 은 매 턴 발화 → 세션당 1회인 SessionEnd 가 "Session log = 세션별 한 줄" 의미에 맞다.*
 - **pre-commit (Lefthook)**: typecheck · 전체 lint(경계 포함) · 관련 test.
 - **피드백 사다리**: PostToolUse(ms) → pre-commit(s) → CI(min) → 사람(h). 빠른 레이어일수록 컨텍스트가 깨끗하다.
 
 ## 4. Commands & Skills (이름·트리거·목적만; 절차는 각 파일에 에이전트가 작성)
 
-- **commands**(사용자 호출): `/kickoff`(**프로젝트 0→1** — 발견 인터뷰로 제품 명세 확정 → ADR·exec-plan·HANDOFF 로 연결) · `/commit`(검증 후 컨벤셔널 커밋) · `/review`(diff 셀프리뷰: 타입/린트/불변식/정의완료) · `/deploy`(**고위험 — §2 ask + §3 훅으로 기계 게이트**) · `/cleanup`(엔트로피 GC: 죽은 코드·미사용 의존성·docs 신선도).
+- **commands**(사용자 호출): `/kickoff`(**프로젝트 0→1** — 발견 인터뷰로 제품 명세 확정 → ADR·exec-plan·HANDOFF 로 연결) · `/commit`(검증 후 컨벤셔널 커밋) · `/review`(diff **적대적 리뷰** — fresh 서브에이전트 위임: 타입/린트/불변식/정의완료) · `/deploy`(**고위험 — §2 ask + §3 훅으로 기계 게이트**) · `/cleanup`(엔트로피 GC: 죽은 코드·미사용 의존성·docs 신선도).
 - **skills**(자동 활성화, description이 트리거): 요구사항 발견(아이디어→명세) · 기능 수직 슬라이스 스캐폴딩 · UI 컴포넌트 추가 규칙.
+- **subagents**(위임·읽기전용, `.claude/agents/`): `code-reviewer`·`security-reviewer` — **fresh 컨텍스트 적대적 리뷰**(작성한 모델이 스스로 채점하지 않게). `/review` 가 위임.
+- **MCP**(`.mcp.json`): 외부 도구·문서 조회. Context7 연결로 "공식 문서/Context7 확인" 지시를 *실행 가능*하게(비밀 미포함 — 베이스 티어, 키는 env 로 승급).
   > 원문: 개발 루프(테스트·검증·리뷰·복구)를 시스템에 인코딩.
 
 ## 5. `docs/` — 기록 시스템 (슬롯; **내용은 개발 중 작성**)

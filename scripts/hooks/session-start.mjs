@@ -62,8 +62,34 @@ function activePlans() {
   return out;
 }
 
+// SessionStart 는 컴팩션 후에도 source="compact" 로 재발화한다(공식 문서). 즉 이 훅이
+// HANDOFF·활성 plan·명세 게이트를 압축 후에도 디스크에서 재주입한다 — 연속성 컨텍스트의
+// 컴팩션 생존 경로. (PreCompact 훅은 컨텍스트를 주입할 수 없고 차단만 가능하므로 부적합.)
+function hookSource() {
+  try {
+    const raw = readFileSync(0, "utf8");
+    if (!raw.trim()) return "";
+    return JSON.parse(raw).source || "";
+  } catch {
+    return "";
+  }
+}
+
+function compactionBanner(source) {
+  if (source !== "compact") return "";
+  return (
+    "\n## ♻️ 컴팩션 후 재주입\n" +
+    "방금 컨텍스트가 압축됐다. 아래 HANDOFF·활성 exec-plan·제품 명세 게이트는 디스크에서 " +
+    "재주입된 것이다. 요약 과정에서 사라졌을 수 있는 **불변식(CLAUDE.md)·미커밋 변경·" +
+    "진행 중 작업의 다음 단계**를 다시 확인하라.\n"
+  );
+}
+
+const source = hookSource();
+
 const parts = [
   "# 세션 컨텍스트 (SessionStart 훅 자동 주입)",
+  compactionBanner(source),
   productSpecNudge(),
   `\n## 최근 커밋\n\`\`\`\n${gitLog()}\n\`\`\``,
   fileSection("HANDOFF", "docs/HANDOFF.md"),

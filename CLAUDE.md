@@ -7,6 +7,7 @@
 ## 세션 진입점
 새 세션은 `docs/HANDOFF.md`에서 시작한다. 진행 중 계획은 `docs/exec-plans/active/`에 있다. (둘 다 SessionStart 훅이 자동 주입)
 **새 프로젝트는 먼저 `/kickoff`** (발견 인터뷰)로 제품 명세를 확정한 뒤 스캐폴딩한다 — 명세 미정의 시 SessionStart 훅이 게이트.
+> **컴팩션 보존**: 컨텍스트 압축 시 불변식·활성 exec-plan 경로·제품 명세 게이트 상태·미커밋 변경을 요약에 남긴다. (SessionStart 훅이 `compact` 소스로 재발화해 HANDOFF·plan·게이트를 재주입 — 강제 → [scripts/hooks/session-start.mjs](scripts/hooks/session-start.mjs))
 
 ## 무엇이 어디 있는지 (라우팅)
 | 찾는 것 | 위치 |
@@ -36,9 +37,10 @@
 | 경계 린트 틀 | [eslint.config.mjs](eslint.config.mjs) |
 | env 검증 (loud fail) | [src/env.ts](src/env.ts) |
 
-## 명령 & 스킬
+## 명령 & 스킬 & 에이전트
 - 명령(사용자 호출): `/kickoff`(프로젝트 시작) · `/commit` · `/review` · `/deploy`(고위험) · `/cleanup` — [.claude/commands/](.claude/commands/)
 - 스킬(자동): 요구사항 발견 · 기능 수직 슬라이스 · UI 컴포넌트 추가 — [.claude/skills/](.claude/skills/)
+- 에이전트(위임·읽기전용): `code-reviewer` · `security-reviewer` — fresh 컨텍스트 적대적 리뷰(작성자 편향 제거). `/review` 가 위임 — [.claude/agents/](.claude/agents/)
 
 ## 작업 방식 (메타 원칙)
 1. **맵, 매뉴얼 아님** — 상세는 docs로. 여긴 라우팅만.
@@ -48,7 +50,7 @@
 5. **고위험엔 사람** — 배포·마이그레이션·파괴적 작업은 사람 게이트.
 6. **반복 하드닝** — 막히면 메커니즘 하나 추가 + `docs/lessons.md`에 기록.
 
-도구별 최신 설정은 추측 금지 — 공식 문서/Context7 확인 후 적용. 설계 결정은 미리 못박지 말고 ADR로 기록.
+도구별 최신 설정은 추측 금지 — 공식 문서/Context7 확인 후 적용(Context7 MCP 연결 → [.mcp.json](.mcp.json)). 설계 결정은 미리 못박지 말고 ADR로 기록.
 
 ## 코딩 행동 수칙 (LLM 흔한 실수 줄이기 — 전체: [docs/andrej-karpathy-CLAUDE.md](docs/andrej-karpathy-CLAUDE.md))
 > 신중함을 속도보다 우선. 사소한 작업엔 판단으로.
